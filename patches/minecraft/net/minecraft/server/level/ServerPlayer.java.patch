@@ -140,7 +140,25 @@
        if (!this.f_8941_.m_143473_(p_143404_)) {
           return false;
        } else {
-@@ -1266,6 +_,7 @@
+@@ -1260,12 +_,25 @@
+    }
+ 
+    public void m_9156_(ServerboundClientInformationPacket p_9157_) {
++      net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerEvent.ChangeClientSettingsEvent(
++          this,
++          p_9157_.f_133863_(),
++          p_9157_.f_133864_(),
++          p_9157_.f_133865_(),
++          p_9157_.f_133866_(),
++          p_9157_.f_133867_(),
++          p_9157_.f_133868_(),
++          p_9157_.f_179550_(),
++          p_9157_.f_195812_()
++      ));
++
+       this.f_8922_ = p_9157_.f_133865_();
+       this.f_8923_ = p_9157_.f_133866_();
+       this.f_143378_ = p_9157_.f_179550_();
        this.f_184127_ = p_9157_.f_195812_();
        this.m_20088_().m_135381_(f_36089_, (byte)p_9157_.f_133867_());
        this.m_20088_().m_135381_(f_36090_, (byte)(p_9157_.f_133868_() == HumanoidArm.LEFT ? 0 : 1));

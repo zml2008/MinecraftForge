@@ -19,9 +19,13 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.ChatVisiblity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundClientInformationPacket;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -537,6 +541,131 @@ public class PlayerEvent extends LivingEvent
         public void setNewGameMode(GameType newGameMode)
         {
             this.newGameMode = newGameMode;
+        }
+    }
+    
+    /**
+     * Event thrown when a player's client sends the server information 
+     * about its settings, but before they are applied to the player.
+     *
+     * <p>The methods in this event return the <em>new</em> values, and 
+     * the values on the {@link Player} instance are the <em>old</em> values.
+     *
+     * <p>The fields in this event are those updated by the {@link ServerboundClientInformationPacket}.
+     */
+    public static class ChangeClientSettingsEvent extends PlayerEvent
+    {
+
+        private final String language;
+        private final int viewDistance;
+        private final ChatVisiblity chatVisibility;
+        private final boolean chatColors;
+        private final int modelPartMask;
+        private final HumanoidArm mainHand;
+        private final boolean textFilteringEnabled;
+        private final boolean allowsListing;
+
+        public ChangeClientSettingsEvent(
+            Player player,
+            String language,
+            int viewDistance,
+            ChatVisiblity chatVisibility,
+            boolean chatColors,
+            int modelPartMask,
+            HumanoidArm mainHand,
+            boolean textFilteringEnabled,
+            boolean allowsListing
+        )
+        {
+            super(player);
+            this.language = language;
+            this.viewDistance = viewDistance;
+            this.chatVisibility = chatVisibility;
+            this.chatColors = chatColors;
+            this.modelPartMask = modelPartMask;
+            this.mainHand = mainHand;
+            this.textFilteringEnabled = textFilteringEnabled;
+            this.allowsListing = allowsListing;
+        }
+
+        /**
+         * Get the new language string the client is using.
+         * 
+         * @return the language identifier
+         */
+        public String getLanguage()
+        {
+            return this.language;
+        }
+
+        /**
+         * Get the view distance in chunks.
+         *
+         * @return the view distance in chunks
+         */
+        public int getViewDistance()
+        {
+            return this.viewDistance;
+        }
+
+        /**
+         * Get which chat messages a client will see.
+         *
+         * @return the client's chosen chat visibility
+         */
+        public ChatVisiblity getChatVisiblity()
+        {
+            return this.chatVisibility;
+        }
+
+        /**
+         * Get whether the client will render colors in chat.
+         *
+         * @return whether text colors are rendered
+         */
+        public boolean getChatColors()
+        {
+            return this.chatColors;
+        }
+
+        /**
+         * Get the mask of rendered {@link PlayerModelPart}s in the player's skin.
+         *
+         * @return the model part mask
+         */
+        public int getModelPartMask()
+        {
+            return this.modelPartMask;
+        }
+
+        /**
+         * Get the player's new main hand.
+         *
+         * @return the main hand
+         */
+        public HumanoidArm getMainHand()
+        {
+            return this.mainHand;
+        }
+
+        /**
+         * Get whether messages sent to this client should be passed through the game's text filtering system.
+         *
+         * @return whether text filtering is enabled on this client
+         */
+        public boolean getTextFilteringEnabled()
+        {
+            return this.textFilteringEnabled;
+        }
+
+        /**
+         * Get whether the client's player should be listed in any visible player lists.
+         *
+         * @return whether listing is allowed
+         */
+        public boolean getAllowsListing()
+        {
+            return this.allowsListing;
         }
     }
 }
